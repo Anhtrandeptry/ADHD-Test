@@ -1,2 +1,2 @@
 # ADHD-Test
-This project is a ADHD test for ADHD online shop.
+This project is an ADHD test for ADHD online shop.
