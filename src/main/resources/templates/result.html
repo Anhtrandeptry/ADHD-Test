@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ADHD Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .question {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .question label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .answers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .answers label {
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .answers input[type="radio"] {
+            display: none;
+        }
+
+        .answers input[type="radio"]:checked + label {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn {
+            display: block;
+            margin: 30px auto 0;
+            padding: 12px 24px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #135ba1;
+        }
+
+        .result-box {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            background-color: #e8f5e9;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 th:text="${result != null} ? 'ADHD Assessment Result' : 'ADHD Screening Quiz'"></h2>
+
+    <div class="result-box" th:if="${result != null}" th:text="${result}"></div>
+
+    <form th:if="${result == null}" th:action="@{/adhd/analyze}" method="post">
+        <div th:each="q, iterStat : ${questions}" class="question">
+            <label th:for="${'responses[' + iterStat.index + '].answer'}" th:text="${q.question}"></label>
+            <input type="hidden" th:name="${'responses[' + iterStat.index + '].question'}" th:value="${q.question}" />
+
+            <div class="answers">
+                <input type="radio" th:id="${'never_' + iterStat.index}" th:name="${'responses[' + iterStat.index + '].answer'}" value="Never" required />
+                <label th:for="${'never_' + iterStat.index}">Never</label>
+
+                <input type="radio" th:id="${'rarely_' + iterStat.index}" th:name="${'responses[' + iterStat.index + '].answer'}" value="Rarely" />
+                <label th:for="${'rarely_' + iterStat.index}">Rarely</label>
+
+                <input type="radio" th:id="${'sometimes_' + iterStat.index}" th:name="${'responses[' + iterStat.index + '].answer'}" value="Sometimes" />
+                <label th:for="${'sometimes_' + iterStat.index}">Sometimes</label>
+
+                <input type="radio" th:id="${'often_' + iterStat.index}" th:name="${'responses[' + iterStat.index + '].answer'}" value="Often" />
+                <label th:for="${'often_' + iterStat.index}">Often</label>
+
+                <input type="radio" th:id="${'veryoften_' + iterStat.index}" th:name="${'responses[' + iterStat.index + '].answer'}" value="Very Often" />
+                <label th:for="${'veryoften_' + iterStat.index}">Very Often</label>
+            </div>
+        </div>
+        <button type="submit" class="btn">Submit Quiz</button>
+    </form>
+
+    <a th:if="${result != null}" href="/adhd/quiz" class="btn">Retake Quiz</a>
+</div>
+
+</body>
+</html>
